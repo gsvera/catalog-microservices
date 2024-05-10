@@ -17,5 +17,7 @@ public class CatalogProfileDTO {
     @Getter
     private String profileNameEn;
     @Getter
-    private String description;
+    private String descriptionEs;
+    @Getter
+    private String descriptionEn;
 }
