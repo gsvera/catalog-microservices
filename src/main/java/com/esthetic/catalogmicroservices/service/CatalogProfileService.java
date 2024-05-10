@@ -23,18 +23,20 @@ public class CatalogProfileService {
                 item.getId(),
                 item.getProfileNameEs(),
                 item.getProfileNameEn(),
-                item.getDescription()
+                item.getDescriptionEs(),
+                item.getDescriptionEn()
         )).collect(Collectors.toList());
     }
 
     public CatalogProfileDTO getById(Long id) {
         Optional<CatalogProfile> catalogProfile = catalogProfileRepository.findById(id);
-        System.out.println(catalogProfile.get());
+
         return new CatalogProfileDTO(
                 catalogProfile.get().getId(),
                 catalogProfile.get().getProfileNameEs(),
                 catalogProfile.get().getProfileNameEn(),
-                catalogProfile.get().getDescription()
+                catalogProfile.get().getDescriptionEs(),
+                catalogProfile.get().getDescriptionEn()
         );
     }
 }
