@@ -1,21 +1,25 @@
 package com.esthetic.catalogmicroservices.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
 
 @Entity
 @Table(name = "tbl_catalog_profile")
 @ToString
+@Data
 public class CatalogProfile {
-    @Id @Getter @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Getter @Column(name = "profile_name_es")
+    @Column(name = "profile_name_es")
     private String profileNameEs;
-    @Getter @Column(name = "profile_name_en")
+    @Column(name = "profile_name_en")
     private String profileNameEn;
-    @Getter @Column(name = "description_es")
+    @Column(name = "description_es")
     private String descriptionEs;
-    @Getter @Column(name = "description_en")
+    @Column(name = "description_en")
     private String descriptionEn;
+    @Column(name = "with_plan")
+    private boolean withPlan;
 }

@@ -12,8 +12,10 @@ import java.util.List;
 public class CatalogPlanDTO {
     private int id;
     private String name;
-    private String description;
+    private String descriptionEs;
+    private String descriptionEn;
     private double price;
+    private int duration;
     private int active;
     private List<CatalogPlanDetailDTO> planDetails;
 

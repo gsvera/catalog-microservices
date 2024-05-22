@@ -12,8 +12,12 @@ public class CatalogPlan {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private String description;
+    @Column(name = "description_es")
+    private String descriptionEs;
+    @Column(name = "description_en")
+    private String descriptionEn;
     private double price;
+    private int duration;
     private int active;
     @OneToMany(mappedBy = "catalogPlan")
     private List<CatalogPlanDetail> planDetails;

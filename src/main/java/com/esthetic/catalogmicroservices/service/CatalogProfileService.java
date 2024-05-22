@@ -24,7 +24,8 @@ public class CatalogProfileService {
                 item.getProfileNameEs(),
                 item.getProfileNameEn(),
                 item.getDescriptionEs(),
-                item.getDescriptionEn()
+                item.getDescriptionEn(),
+                item.isWithPlan()
         )).collect(Collectors.toList());
     }
 
@@ -36,7 +37,8 @@ public class CatalogProfileService {
                 catalogProfile.get().getProfileNameEs(),
                 catalogProfile.get().getProfileNameEn(),
                 catalogProfile.get().getDescriptionEs(),
-                catalogProfile.get().getDescriptionEn()
+                catalogProfile.get().getDescriptionEn(),
+                catalogProfile.get().isWithPlan()
         );
     }
 }
