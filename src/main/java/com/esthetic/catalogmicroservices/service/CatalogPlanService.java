@@ -18,7 +18,7 @@ public class CatalogPlanService {
     }
 
     public List<CatalogPlanDTO> getAllPlan() {
-        List<CatalogPlan> catalogPlans = catalogPlanRepository.findAll();
+        List<CatalogPlan> catalogPlans = catalogPlanRepository.finByActive(1);
         return catalogPlans.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
@@ -29,8 +29,10 @@ public class CatalogPlanService {
         return new CatalogPlanDTO(
                 catalogPlan.getId(),
                 catalogPlan.getName(),
-                catalogPlan.getDescription(),
+                catalogPlan.getDescriptionEs(),
+                catalogPlan.getDescriptionEn(),
                 catalogPlan.getPrice(),
+                catalogPlan.getDuration(),
                 catalogPlan.getActive(),
                 detailDTOS
         );
