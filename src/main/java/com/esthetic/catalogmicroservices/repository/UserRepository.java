@@ -1,0 +1,10 @@
+package com.esthetic.catalogmicroservices.repository;
+
+import com.esthetic.catalogmicroservices.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByToken(String token);
+}

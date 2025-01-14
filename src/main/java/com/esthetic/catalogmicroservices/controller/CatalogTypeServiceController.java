@@ -19,7 +19,7 @@ public class CatalogTypeServiceController {
             response.items = catalogTypeServiceService.getAllCatalogTypeService();
         } catch(Exception ex) {
             response.error = true;
-            // response.message = ex.getMessage();
+            System.out.println(ex.getMessage());
         }
         return response;
     }

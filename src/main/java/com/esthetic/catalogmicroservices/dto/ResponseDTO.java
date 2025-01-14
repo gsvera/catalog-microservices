@@ -1,10 +1,12 @@
 package com.esthetic.catalogmicroservices.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ResponseDTO {
     public boolean error;
     public Object items;

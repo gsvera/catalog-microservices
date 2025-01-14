@@ -15,7 +15,7 @@ public class CatalogPlanController {
     @Autowired
     private CatalogPlanService catalogPlanService;
 
-    @GetMapping
+    @GetMapping("/filter/data")
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO getAllPlan(){
         ResponseDTO response = new ResponseDTO();
