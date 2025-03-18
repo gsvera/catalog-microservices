@@ -18,7 +18,7 @@ public class CatalogPlanService {
     }
 
     public List<CatalogPlanDTO> getAllPlan() {
-        List<CatalogPlan> catalogPlans = catalogPlanRepository.finByActive(1);
+        List<CatalogPlan> catalogPlans = catalogPlanRepository.finByActive(true);
         return catalogPlans.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 

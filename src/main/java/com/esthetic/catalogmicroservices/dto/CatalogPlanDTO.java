@@ -16,7 +16,7 @@ public class CatalogPlanDTO {
     private String descriptionEn;
     private double price;
     private int duration;
-    private int active;
+    private Boolean active;
     private List<CatalogPlanDetailDTO> planDetails;
 
 }
