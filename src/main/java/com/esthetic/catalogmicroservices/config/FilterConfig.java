@@ -12,7 +12,6 @@ public class FilterConfig {
         FilterRegistrationBean<FilterAuthentication> registrationBean = new FilterRegistrationBean<>();
 
         registrationBean.setFilter(new FilterAuthentication());
-        registrationBean.addUrlPatterns("/api/esthetic/catalog-user-service/*");
 
         return registrationBean;
     }

@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FilterAuthentication extends OncePerRequestFilter {
 
-    private static final List<String> EXCLUDED_PATH = Arrays.asList("/api/esthetic/catalog-plan", "/api/esthetic/catalog-lada-phone");
+    private static final List<String> EXCLUDED_PATH = Arrays.asList("/api/esthetic/catalog-plan", "/api/esthetic/catalog-lada-phone", "/api/esthetic/catalog-type-service");
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if(isExcludedPath(request)) {
@@ -34,9 +35,9 @@ public class FilterAuthentication extends OncePerRequestFilter {
 
         final String token = getTokenFromRequest(request);
 
-        if(token == null) {
-            filterChain.doFilter(request, response);
-            return ;
+        if(token == null || token.isEmpty()) {
+            sendErrorResponse(response, "Session expired", HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
 
         RestTemplate restTemplate = new RestTemplate();
@@ -57,6 +58,13 @@ public class FilterAuthentication extends OncePerRequestFilter {
             return;
         }
 
+    }
+    private void sendErrorResponse(HttpServletResponse response, String message, int statusCode) throws IOException {
+        response.setStatus(statusCode);
+        response.setContentType("application/json");
+        PrintWriter writer = response.getWriter();
+        writer.write("{\"error\": true, \"message\": \"" + message + "\"}");
+        writer.flush();
     }
     private boolean isExcludedPath(HttpServletRequest request) {
         String requestPath = request.getRequestURI();

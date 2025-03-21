@@ -11,28 +11,30 @@ import org.springframework.http.HttpStatus;
 public class CatalogTypeServiceController {
     @Autowired
     private CatalogTypeServiceService catalogTypeServiceService;
-    @GetMapping
+    @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO getAllCatalogTypeService() {
         ResponseDTO response = new ResponseDTO();
         try{
             response.items = catalogTypeServiceService.getAllCatalogTypeService();
         } catch(Exception ex) {
-            response.error = true;
             System.out.println(ex.getMessage());
+            response.error = true;
+            response.message = "Ocurrio un error intentelo mas tarde";
         }
         return response;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get-by-id/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO getById(@PathVariable("id") Long id) {
         ResponseDTO response = new ResponseDTO();
         try {
             response.items = catalogTypeServiceService.getById(id);
         } catch(Exception ex) {
+            System.out.println(ex.getMessage());
             response.error = true;
-            // response.message = ex.getMessage();
+            response.message = "Ocurrio un error intentelo mas tarde";
         }
         return response;
     }
