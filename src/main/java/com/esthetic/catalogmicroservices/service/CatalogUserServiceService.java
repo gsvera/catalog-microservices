@@ -1,49 +1,61 @@
 package com.esthetic.catalogmicroservices.service;
 
 import com.esthetic.catalogmicroservices.dto.CatalogUserServiceDTO;
+import com.esthetic.catalogmicroservices.dto.CatalogUserServiceDetailDTO;
 import com.esthetic.catalogmicroservices.dto.ResponseDTO;
 import com.esthetic.catalogmicroservices.entity.CatalogUserService;
-import com.esthetic.catalogmicroservices.entity.User;
+import com.esthetic.catalogmicroservices.entity.CatalogUserServiceDetail;
+import com.esthetic.catalogmicroservices.repository.CatalogUserServiceDetailRepository;
 import com.esthetic.catalogmicroservices.repository.CatalogUserServiceRepository;
-import com.esthetic.catalogmicroservices.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CatalogUserServiceService {
     private final CatalogUserServiceRepository catalogUserServiceRepository;
-    private final UserRepository userRepository;
+    private final CatalogUserServiceDetailRepository catalogUserServiceDetailRepository;
 
-    public ResponseDTO SaveCatalogUserService(String token, CatalogUserServiceDTO catalogUserServiceDTO) {
-        ResponseDTO response = new ResponseDTO();
-        Optional<User> user = userRepository.findByToken(token.substring(7));
-
-        CatalogUserService getCatalogUserService = catalogUserServiceRepository.findByidUserAndIdService(user.get().getId(), catalogUserServiceDTO.getIdService());
-
-        if(getCatalogUserService == null) {
-            CatalogUserService newCatalogUserService = new CatalogUserService(
-                    0,
-                    user.get().getId(),
-                    catalogUserServiceDTO.getIdService(),
-                    catalogUserServiceDTO.getMinPrice(),
-                    catalogUserServiceDTO.getMaxPrice()
-            );
-            catalogUserServiceRepository.save(newCatalogUserService);
-            response.error = false;
-            return response;
-        } else{
-            response.items = getCatalogUserService;
-            response.error = true;
-            return response;
+    public ResponseDTO _SaveCatalogService(CatalogUserServiceDTO catalogUserServiceDTO ){
+        CatalogUserService newCatalogUserService = new CatalogUserService(catalogUserServiceDTO);
+        catalogUserServiceRepository.save(newCatalogUserService);
+        for(CatalogUserServiceDetailDTO items : catalogUserServiceDTO.items) {
+            items.idUserCatalogService = newCatalogUserService.getId();
+            catalogUserServiceDetailRepository.save(new CatalogUserServiceDetail(items));
         }
+        return ResponseDTO.builder().message("Registro guardado con éxito").build();
     }
-    public List<CatalogUserServiceDTO> GetByUser(String token) {
-        List<CatalogUserService> list = (List<CatalogUserService>) catalogUserServiceRepository.findAllByIdUser(token.substring(7));
-        return list.stream().map(item -> new CatalogUserServiceDTO(item)).collect(Collectors.toList());
+    public ResponseDTO _GetByUser(String idUser) {
+        List<Object[]> list = catalogUserServiceRepository.findAllByIdUser(idUser);
+        List<CatalogUserServiceDTO> listCatalog = new ArrayList<>();
+        for(Object[] row : list) {
+            CatalogUserServiceDTO catalogUserServiceDTO = new CatalogUserServiceDTO();
+            CatalogUserServiceDetailDTO catalogUserServiceDetailDTO = new CatalogUserServiceDetailDTO();
+            catalogUserServiceDTO.id = (Long)row[0];
+            catalogUserServiceDTO.nameService = (String)row[1];
+            catalogUserServiceDTO.minPrice = (double) row[2];
+            catalogUserServiceDTO.maxPrice = (double) row[3];
+            catalogUserServiceDetailDTO.id = (Long) row[4];
+            catalogUserServiceDetailDTO.fileBase64 = (String)row[5];
+            catalogUserServiceDTO.totalElement = row[6] != null ? ((Number) row[6]).intValue() : 0;
+            catalogUserServiceDTO.catalogUserServiceDetailDTO = catalogUserServiceDetailDTO;
+            listCatalog.add(catalogUserServiceDTO);
+        }
+        return ResponseDTO.builder().items(listCatalog).build();
+    }
+    public ResponseDTO _DeleteCatalogServiceById(Long idCatalog) {
+        List<CatalogUserServiceDetail> list = catalogUserServiceDetailRepository.findByIdUserCatalogServiceToDelete(idCatalog);
+        if(list.size() > 0) {
+            catalogUserServiceDetailRepository.deleteAll(list);
+        }
+        Optional<CatalogUserService> catalogUserService = catalogUserServiceRepository.findById(idCatalog);
+        if(catalogUserService.isPresent()) {
+            catalogUserServiceRepository.delete(catalogUserService.get());
+        }
+        return ResponseDTO.builder().message("Registro eliminado con éxito").build();
     }
 }

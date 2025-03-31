@@ -2,12 +2,9 @@ package com.esthetic.catalogmicroservices.controller;
 
 import com.esthetic.catalogmicroservices.dto.CatalogUserServiceDTO;
 import com.esthetic.catalogmicroservices.dto.ResponseDTO;
-import com.esthetic.catalogmicroservices.entity.CatalogUserService;
 import com.esthetic.catalogmicroservices.service.CatalogTypeServiceService;
 import com.esthetic.catalogmicroservices.service.CatalogUserServiceService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,26 +22,23 @@ public class CatalogUserServiceController {
     private CatalogTypeServiceService catalogTypeServiceService;
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDTO SaveCatalogUserService(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody CatalogUserServiceDTO catalogUserServiceDTO) {
+    public ResponseDTO SaveCatalogUserService(@RequestBody CatalogUserServiceDTO catalogUserServiceDTO) {
         try{
-            return catalogUserServiceService.SaveCatalogUserService(token, catalogUserServiceDTO);
+            return catalogUserServiceService._SaveCatalogService(catalogUserServiceDTO);
         }catch (Exception ex) {
             System.out.println(ex.getMessage());
             return ResponseDTO.builder().error(true).message("Ocurrio un error intentelo mas tarde").build();
         }
     }
-    @GetMapping("/service-get-by-user")
+    @GetMapping("/service-get-by-user/{id-user}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDTO GetCatalogServiceByUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        ResponseDTO response = new ResponseDTO();
+    public ResponseDTO GetCatalogServiceByUser(@PathVariable("id-user") String idUser) {
         try{
-            response.items = catalogUserServiceService.GetByUser(token);
+            return catalogUserServiceService._GetByUser(idUser);
         } catch(Exception ex) {
-            response.error = true;
-            response.message = "Ocurrio un error intentelo mas tarde";
             System.out.println(ex.getMessage());
+            return ResponseDTO.builder().error(true).message("Ocurrio un error intentelo mas tarde").build();
         }
-        return response;
     }
     @GetMapping("/get-type-service-by-user")
     @ResponseStatus(HttpStatus.OK)
@@ -67,6 +61,15 @@ public class CatalogUserServiceController {
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
             return ResponseDTO.builder().error(true).message("Ocurrio un error intentelo mas tarde").build();
+        }
+    }
+    @DeleteMapping("/delete-catalog-service-by-id/{id-catalog}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDTO DeleteCatalogServiceById(@PathVariable("id-catalog") Long idCatalog) {
+        try{
+            return  catalogUserServiceService._DeleteCatalogServiceById(idCatalog);
+        } catch (Exception ex) {
+            return ResponseDTO.builder().error(true).message("Ocurrio un error intentelo más tarde").build();
         }
     }
 }
