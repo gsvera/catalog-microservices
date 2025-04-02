@@ -11,4 +11,7 @@ public interface CatalogUserServiceRepository extends JpaRepository<CatalogUserS
             "FROM tbl_user_catalog_service AS ucs LEFT JOIN tbl_user_catalog_service_detail AS ucsd ON ucs.id = ucsd.id_user_catalog_service \n" +
             "WHERE ucs.id_user = ?1", nativeQuery = true)
     List<Object[]>  findAllByIdUser(String idUser);
+    @Query(value = "SELECT c FROM CatalogUserService c LEFT JOIN FETCH c.detail WHERE c.id = ?1")
+    CatalogUserService findCatalogByIdWithDetail(Long id);
+    List<CatalogUserService> findByIdUser(String id);
 }

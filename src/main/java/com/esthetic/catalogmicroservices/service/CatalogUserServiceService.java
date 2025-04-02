@@ -1,5 +1,6 @@
 package com.esthetic.catalogmicroservices.service;
 
+import com.esthetic.catalogmicroservices.config.EnvConfig;
 import com.esthetic.catalogmicroservices.dto.CatalogUserServiceDTO;
 import com.esthetic.catalogmicroservices.dto.CatalogUserServiceDetailDTO;
 import com.esthetic.catalogmicroservices.dto.ResponseDTO;
@@ -12,22 +13,37 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CatalogUserServiceService {
+    private final EnvConfig envConfig;
     private final CatalogUserServiceRepository catalogUserServiceRepository;
     private final CatalogUserServiceDetailRepository catalogUserServiceDetailRepository;
 
     public ResponseDTO _SaveCatalogService(CatalogUserServiceDTO catalogUserServiceDTO ){
+        List<CatalogUserService> list = catalogUserServiceRepository.findByIdUser(catalogUserServiceDTO.idUser);
+        if(list.size() >= envConfig.getMaxFileUpload()) {
+            return ResponseDTO.builder().error(true).message("Ha alcanzado el maximo de registros para guardar").build();
+        }
         CatalogUserService newCatalogUserService = new CatalogUserService(catalogUserServiceDTO);
         catalogUserServiceRepository.save(newCatalogUserService);
+        this._SaveDetailCatalogUserService(newCatalogUserService, catalogUserServiceDTO);
+        return ResponseDTO.builder().message("Registro guardado con éxito").build();
+    }
+    public ResponseDTO _UpdateCatalogUserService(CatalogUserServiceDTO catalogUserServiceDTO) {
+        CatalogUserService catalogUserService = new CatalogUserService(catalogUserServiceDTO);
+        catalogUserService.setId(catalogUserServiceDTO.id);
+        catalogUserServiceRepository.save(catalogUserService);
+        catalogUserServiceDetailRepository.deleteDetailByUserCatalogService(catalogUserService.getId());
+        this._SaveDetailCatalogUserService(catalogUserService, catalogUserServiceDTO);
+        return ResponseDTO.builder().message("Registro guardado con éxito").build();
+    }
+    void _SaveDetailCatalogUserService(CatalogUserService catalogUserService, CatalogUserServiceDTO catalogUserServiceDTO) {
         for(CatalogUserServiceDetailDTO items : catalogUserServiceDTO.items) {
-            items.idUserCatalogService = newCatalogUserService.getId();
+            items.idUserCatalogService = catalogUserService;
             catalogUserServiceDetailRepository.save(new CatalogUserServiceDetail(items));
         }
-        return ResponseDTO.builder().message("Registro guardado con éxito").build();
     }
     public ResponseDTO _GetByUser(String idUser) {
         List<Object[]> list = catalogUserServiceRepository.findAllByIdUser(idUser);
@@ -47,15 +63,18 @@ public class CatalogUserServiceService {
         }
         return ResponseDTO.builder().items(listCatalog).build();
     }
+    public ResponseDTO _GetCatalogServiceById(Long idCatalog) {
+        return ResponseDTO.builder().items(
+                catalogUserServiceRepository.findCatalogByIdWithDetail(idCatalog)
+        ).build();
+    }
     public ResponseDTO _DeleteCatalogServiceById(Long idCatalog) {
-        List<CatalogUserServiceDetail> list = catalogUserServiceDetailRepository.findByIdUserCatalogServiceToDelete(idCatalog);
-        if(list.size() > 0) {
-            catalogUserServiceDetailRepository.deleteAll(list);
+        if(!catalogUserServiceRepository.existsById(idCatalog)) {
+            return ResponseDTO.builder().error(true).message("El registro no existe").build();
         }
-        Optional<CatalogUserService> catalogUserService = catalogUserServiceRepository.findById(idCatalog);
-        if(catalogUserService.isPresent()) {
-            catalogUserServiceRepository.delete(catalogUserService.get());
-        }
+        catalogUserServiceDetailRepository.deleteDetailByUserCatalogService(idCatalog);
+        catalogUserServiceRepository.deleteById(idCatalog);
+
         return ResponseDTO.builder().message("Registro eliminado con éxito").build();
     }
 }

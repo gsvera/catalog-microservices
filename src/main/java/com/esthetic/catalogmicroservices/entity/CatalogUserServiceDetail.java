@@ -1,6 +1,7 @@
 package com.esthetic.catalogmicroservices.entity;
 
 import com.esthetic.catalogmicroservices.dto.CatalogUserServiceDetailDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,12 +16,14 @@ public class CatalogUserServiceDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "id_user_catalog_service")
-    private Long idUserCatalogService;
     @Column(name = "file_base_64")
     private String fileBase64;
+    @ManyToOne
+    @JoinColumn(name = "id_user_catalog_service", insertable = true, updatable = true, nullable = false)
+    @JsonBackReference
+    private CatalogUserService catalogUserService;
     public CatalogUserServiceDetail(CatalogUserServiceDetailDTO catalogUserServiceDetailDTO) {
-        this.idUserCatalogService = catalogUserServiceDetailDTO.idUserCatalogService;
+        this.catalogUserService = catalogUserServiceDetailDTO.idUserCatalogService;
         this.fileBase64 = catalogUserServiceDetailDTO.fileBase64;
     }
 }
