@@ -38,8 +38,9 @@ public class CatalogUserServiceController {
         try{
             String idUser = (String) requestBody.get("idUser");
             String ids = (String) requestBody.get("idsType");
+            String generalDescription = (String) requestBody.get("generalDescription");
             List<Long> lisId = Arrays.stream(ids.split(",")).map(Long::valueOf).collect(Collectors.toList());
-            return catalogTypeServiceService._SaveTypeServiceByUser(idUser, lisId);
+            return catalogTypeServiceService._SaveTypeServiceByUser(idUser, lisId, generalDescription);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
             return ResponseDTO.builder().error(true).message("Ocurrio un error intentelo mas tarde").build();
