@@ -54,8 +54,6 @@ public class FilterAuthentication extends OncePerRequestFilter {
             if(responseDTO.error != true) {
                 filterChain.doFilter(request, response);
             }
-        } else {
-            return;
         }
 
     }

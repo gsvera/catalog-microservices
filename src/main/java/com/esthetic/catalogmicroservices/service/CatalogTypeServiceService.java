@@ -51,10 +51,7 @@ public class CatalogTypeServiceService {
         return ResponseDTO.builder().items(response).build();
     }
     public ResponseDTO _SaveTypeServiceByUser(String idUser, List<Long> ids, String generalDescription) {
-        List<TypeServiceXUser> list = typeServiceXUserRepository.findByIdUser(idUser);
-        if(list.size() > 0) {
-            typeServiceXUserRepository.deleteAll(list);
-        }
+        this._DeleteTypeServiceXUser(idUser);
         for(Long id : ids) {
             TypeServiceXUser typeServiceXUser = new TypeServiceXUser(idUser, id);
             typeServiceXUserRepository.save(typeServiceXUser);
@@ -68,5 +65,11 @@ public class CatalogTypeServiceService {
         }
 
         return ResponseDTO.builder().message("Registros guardados con éxito").build();
+    }
+    public void _DeleteTypeServiceXUser(String idUser) {
+        List<TypeServiceXUser> list = typeServiceXUserRepository.findByIdUser(idUser);
+        if(list.size() > 0) {
+            typeServiceXUserRepository.deleteAll(list);
+        }
     }
 }
