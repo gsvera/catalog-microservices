@@ -22,4 +22,6 @@ public class CatalogTypeService {
     private String descriptionEn;
     private String icon;
     private String acronym;
+    @Column(name = "is_active")
+    private Boolean isActive;
 }

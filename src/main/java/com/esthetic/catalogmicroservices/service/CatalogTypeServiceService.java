@@ -31,7 +31,7 @@ public class CatalogTypeServiceService {
     }
 
     public List<CatalogTypeServiceDTO> getAllCatalogTypeService() {
-        List<CatalogTypeService> catalogTypeService = catalogTypeServiceRepository.findAll();
+        List<CatalogTypeService> catalogTypeService = catalogTypeServiceRepository.findAllisActive();
         return catalogTypeService.stream().map(item -> new CatalogTypeServiceDTO(item)).collect(Collectors.toList());
     }
     public CatalogTypeServiceDTO getById(Long id) {
