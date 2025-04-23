@@ -9,10 +9,7 @@ import com.esthetic.catalogmicroservices.repository.CatalogTypeServiceRepository
 import com.esthetic.catalogmicroservices.repository.TypeServiceXUserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +37,18 @@ public class CatalogTypeServiceService {
         Map<String, Object> response = new HashMap<>();
         response.put("listType", listType);
         return ResponseDTO.builder().items(response).build();
+    }
+    public ResponseDTO _GetTypesNamesByUser(String idUser) {
+        List<Object[]> listTypes = typeServiceXUserRepository.findTypesByUser(idUser);
+        List<TypeServiceXUserDTO> listTypesDTO = new ArrayList<>();
+        for(Object[] row : listTypes) {
+            TypeServiceXUserDTO typeServiceXUserDTO = new TypeServiceXUserDTO();
+            typeServiceXUserDTO.id = (Long) row[0];
+            typeServiceXUserDTO.idTypeService = (Long) row[1];
+            typeServiceXUserDTO.nameType = (String)row[2];
+            listTypesDTO.add(typeServiceXUserDTO);
+        }
+        return ResponseDTO.builder().items(listTypesDTO).build();
     }
     public ResponseDTO _SaveTypeServiceByUser(String idUser, List<Long> ids) {
         this._DeleteTypeServiceXUser(idUser);

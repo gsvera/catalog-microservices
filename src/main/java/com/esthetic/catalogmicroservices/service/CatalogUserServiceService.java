@@ -68,6 +68,10 @@ public class CatalogUserServiceService {
                 catalogUserServiceRepository.findCatalogByIdWithDetail(idCatalog)
         ).build();
     }
+    public ResponseDTO _GetDetailCatalogServiceById(Long idProject) {
+        List<CatalogUserServiceDetail> catalogUserServiceDetailList = catalogUserServiceDetailRepository.findByIdUserCatalogServiceToDelete(idProject);
+        return ResponseDTO.builder().items(catalogUserServiceDetailList.stream().map(item -> new CatalogUserServiceDetailDTO(item))).build();
+    }
     public ResponseDTO _DeleteCatalogServiceById(Long idCatalog) {
         if(!catalogUserServiceRepository.existsById(idCatalog)) {
             return ResponseDTO.builder().error(true).message("El registro no existe").build();
