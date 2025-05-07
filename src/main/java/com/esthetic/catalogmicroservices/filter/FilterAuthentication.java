@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FilterAuthentication extends OncePerRequestFilter {
 
-    private static final List<String> EXCLUDED_PATH = Arrays.asList("/api/esthetic/catalog-plan", "/api/esthetic/catalog-lada-phone", "/api/esthetic/catalog-type-service");
+    private static final List<String> EXCLUDED_PATH = Arrays.asList("/api/esthetic/catalog-plan", "/api/esthetic/catalog-lada-phone", "/api/esthetic/catalog-type-service", "/api/esthetic/catalog");
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if(isExcludedPath(request)) {
