@@ -9,4 +9,6 @@ import org.springframework.context.annotation.Configuration;
 public class EnvConfig {
     @Value("${env.max_file_upload}")
     private int maxFileUpload;
+    @Value("${my.property.api.gateway}")
+    private String apiGateway;
 }

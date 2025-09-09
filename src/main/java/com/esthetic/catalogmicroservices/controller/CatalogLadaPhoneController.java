@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CatalogLadaPhoneController {
     @Autowired
     private CatalogLadaPhoneService catalogLadaPhoneService;
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO getAllCatalogLadaPhone() {

@@ -1,5 +1,6 @@
 package com.esthetic.catalogmicroservices.filter;
 
+import com.esthetic.catalogmicroservices.config.EnvConfig;
 import com.esthetic.catalogmicroservices.dto.ResponseDTO;
 import com.google.gson.Gson;
 import jakarta.servlet.FilterChain;
@@ -25,6 +26,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FilterAuthentication extends OncePerRequestFilter {
 
+    private final EnvConfig envConfig ;
+
     private static final List<String> EXCLUDED_PATH = Arrays.asList("/api/esthetic/catalog-plan", "/api/esthetic/catalog-lada-phone", "/api/esthetic/catalog-type-service", "/api/esthetic/catalog");
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -44,8 +47,9 @@ public class FilterAuthentication extends OncePerRequestFilter {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity entity = new HttpEntity<>(headers);
         headers.set("Authorization", "Bearer " + token);
-        String apiUrl = "http://localhost:8002/api/esthetic/auth-user/get-data-user";
+        String apiUrl = envConfig.getApiGateway() + "/api/esthetic/auth-user/get-data-user";
 
+System.out.println("LA URL ARMADA" + apiUrl);
         ResponseEntity<String> responseApi = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, String.class);
 
         if(responseApi.getStatusCode().is2xxSuccessful()) {

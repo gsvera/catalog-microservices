@@ -15,7 +15,7 @@ public class DeleteUserController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseDTO DeleteCatalogAccount(@PathVariable(name = "id-user") String idUser) {
         try{
-            return  deleteService._DeleteAllCatalogsByUser(idUser);
+            return deleteService._DeleteAllCatalogsByUser(idUser);
         }catch (Exception ex) {
             return ResponseDTO.builder().error(true).message("Ocurrio un error intentelo mas tarde").build();
         }
