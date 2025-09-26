@@ -16,14 +16,17 @@ public class CatalogUserServiceDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "file_base_64")
-    private String fileBase64;
+    @Column(name = "file_url")
+    private String fileUrl;
+    @Column(name = "file_name")
+    private String fileName;
     @ManyToOne
     @JoinColumn(name = "id_user_catalog_service", insertable = true, updatable = true, nullable = false)
     @JsonBackReference
     private CatalogUserService catalogUserService;
     public CatalogUserServiceDetail(CatalogUserServiceDetailDTO catalogUserServiceDetailDTO) {
         this.catalogUserService = catalogUserServiceDetailDTO.idUserCatalogService;
-        this.fileBase64 = catalogUserServiceDetailDTO.fileBase64;
+        this.fileUrl = catalogUserServiceDetailDTO.fileUrl;
+        this.fileName = catalogUserServiceDetailDTO.fileName;
     }
 }

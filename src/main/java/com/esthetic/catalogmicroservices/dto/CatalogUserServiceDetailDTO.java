@@ -8,10 +8,12 @@ import lombok.RequiredArgsConstructor;
 public class CatalogUserServiceDetailDTO {
     public Long id;
     public CatalogUserService idUserCatalogService;
-    public String fileBase64;
+    public String fileUrl;
+    public String fileName;
     public CatalogUserServiceDetailDTO(CatalogUserServiceDetail catalogUserServiceDetail) {
         this.id = catalogUserServiceDetail.getId();
         this.idUserCatalogService = catalogUserServiceDetail.getCatalogUserService();
-        this.fileBase64 = catalogUserServiceDetail.getFileBase64();
+        this.fileUrl = catalogUserServiceDetail.getFileUrl();
+        this.fileName = catalogUserServiceDetail.getFileName();
     }
 }

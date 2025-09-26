@@ -18,6 +18,7 @@ public class CatalogUserServiceDTO {
     public CatalogUserServiceDetailDTO catalogUserServiceDetailDTO;
     public List<CatalogUserServiceDetailDTO> items;
     public int totalElement;
+    public List<Long> existingFiles;
 
     public CatalogUserServiceDTO(CatalogUserService catalogUserService) {
         this.id = catalogUserService.getId();

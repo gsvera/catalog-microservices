@@ -49,7 +49,6 @@ public class FilterAuthentication extends OncePerRequestFilter {
         headers.set("Authorization", "Bearer " + token);
         String apiUrl = envConfig.getApiGateway() + "/api/esthetic/auth-user/get-data-user";
 
-System.out.println("LA URL ARMADA" + apiUrl);
         ResponseEntity<String> responseApi = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, String.class);
 
         if(responseApi.getStatusCode().is2xxSuccessful()) {
