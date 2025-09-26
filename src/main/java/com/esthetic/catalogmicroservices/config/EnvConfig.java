@@ -19,8 +19,6 @@ public class EnvConfig {
     private String s3SecretKey;
     @Value("${cloud.aws.s3.region}")
     private String s3Region;
-    @Value("${cloud.aws.s3.dirprofile}")
-    private String dirProfile;
     @Value("${cloud.aws.s3.dircatalog}")
     private String dirCatalog;
 }

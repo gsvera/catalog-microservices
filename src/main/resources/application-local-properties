@@ -17,3 +17,8 @@ spring.jpa.show-sql=true
 
 env.max_file_upload=5
 my.property.api.gateway=http://localhost:8002
+# SPACE DIGITAL OCEAN
+cloud.aws.s3.endpoint=https://meredith-aesthetic-pictures.sfo3.digitaloceanspaces.com
+cloud.aws.se.bucket=meredith-aesthetic-pictures
+cloud.aws.s3.dircatalog=catalog
+cloud.aws.s3.region=sfo3
