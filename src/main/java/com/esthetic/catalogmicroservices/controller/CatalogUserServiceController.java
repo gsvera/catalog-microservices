@@ -6,6 +6,7 @@ import com.esthetic.catalogmicroservices.service.CatalogTypeServiceService;
 import com.esthetic.catalogmicroservices.service.CatalogUserServiceService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,12 +37,12 @@ public class CatalogUserServiceController {
 
     @PostMapping("/save-type-service-by-user")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDTO SaveTypeServiceByUser (@RequestBody Map<String,Object> requestBody) {
+    public ResponseDTO SaveTypeServiceByUser (@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody Map<String,Object> requestBody) {
         try{
             String idUser = (String) requestBody.get("idUser");
             String ids = (String) requestBody.get("idsType");
             List<Long> lisId = Arrays.stream(ids.split(",")).map(Long::valueOf).collect(Collectors.toList());
-            return catalogTypeServiceService._SaveTypeServiceByUser(idUser, lisId);
+            return catalogTypeServiceService._SaveTypeServiceByUser(token, idUser, lisId);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
             return ResponseDTO.builder().error(true).message("Ocurrio un error intentelo mas tarde").build();
@@ -49,12 +50,12 @@ public class CatalogUserServiceController {
     }
     @PostMapping("/save-catalog-user-service")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDTO SaveCatalogUserService(@RequestParam(name = "files") List<MultipartFile> files, @RequestParam String catalogUserServiceDTOJson) {
+    public ResponseDTO SaveCatalogUserService(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestParam(name = "files") List<MultipartFile> files, @RequestParam String catalogUserServiceDTOJson) {
         try{
             ObjectMapper mapper = new ObjectMapper();
             CatalogUserServiceDTO catalogUserServiceDTO = mapper.readValue(catalogUserServiceDTOJson, CatalogUserServiceDTO.class);
 
-            return catalogUserServiceService._SaveCatalogService(catalogUserServiceDTO, files);
+            return catalogUserServiceService._SaveCatalogService(token, catalogUserServiceDTO, files);
         }catch (Exception ex) {
             System.out.println(ex.getMessage());
             return ResponseDTO.builder().error(true).message("Ocurrio un error intentelo mas tarde").build();
@@ -62,11 +63,11 @@ public class CatalogUserServiceController {
     }
     @PutMapping("/update-catalog-user-service")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseDTO UpdateCatalogUserService(@RequestParam(name = "files", required = false) List<MultipartFile> files, @RequestParam String catalogUserServiceDTOJson) {
+    public ResponseDTO UpdateCatalogUserService(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestParam(name = "files", required = false) List<MultipartFile> files, @RequestParam String catalogUserServiceDTOJson) {
         try{
             ObjectMapper mapper = new ObjectMapper();
             CatalogUserServiceDTO catalogUserServiceDTO = mapper.readValue(catalogUserServiceDTOJson, CatalogUserServiceDTO.class);
-            return catalogUserServiceService._UpdateCatalogUserService(catalogUserServiceDTO, files);
+            return catalogUserServiceService._UpdateCatalogUserService(token, catalogUserServiceDTO, files);
         } catch (Exception ex) {
             System.out.println(ex);
             return ResponseDTO.builder().error(true).message("Ocurrio un error intentelo mas tarde").build();

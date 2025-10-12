@@ -24,8 +24,13 @@ public class CatalogUserServiceService {
     private final CatalogUserServiceRepository catalogUserServiceRepository;
     private final CatalogUserServiceDetailRepository catalogUserServiceDetailRepository;
     private final SpaceService spaceService;
+    private final UserService userService;
 
-    public ResponseDTO _SaveCatalogService(CatalogUserServiceDTO catalogUserServiceDTO, List<MultipartFile> files) throws IOException{
+    public ResponseDTO _SaveCatalogService(String token, CatalogUserServiceDTO catalogUserServiceDTO, List<MultipartFile> files) throws IOException{
+        ResponseDTO responseDTO = userService._ValidIsActiveProvider(token, catalogUserServiceDTO.idUser);
+        if(responseDTO.error) {
+            return responseDTO;
+        }
         List<CatalogUserService> list = catalogUserServiceRepository.findByIdUser(catalogUserServiceDTO.idUser);
         if(list.size() >= envConfig.getMaxFileUpload()) {
             return ResponseDTO.builder().error(true).message("Ha alcanzado el maximo de registros para guardar").build();
@@ -35,8 +40,12 @@ public class CatalogUserServiceService {
         this._SaveDetailCatalogUserService(newCatalogUserService, files);
         return ResponseDTO.builder().message("Registro guardado con éxito").build();
     }
-    public ResponseDTO _UpdateCatalogUserService(CatalogUserServiceDTO catalogUserServiceDTO, List<MultipartFile> files) throws IOException{
+    public ResponseDTO _UpdateCatalogUserService(String token, CatalogUserServiceDTO catalogUserServiceDTO, List<MultipartFile> files) throws IOException{
         try{
+            ResponseDTO responseDTO = userService._ValidIsActiveProvider(token, catalogUserServiceDTO.idUser);
+            if(responseDTO.error) {
+                return responseDTO;
+            }
             CatalogUserService catalogUserService = new CatalogUserService(catalogUserServiceDTO);
             catalogUserService.setId(catalogUserServiceDTO.id);
             catalogUserServiceRepository.save(catalogUserService);

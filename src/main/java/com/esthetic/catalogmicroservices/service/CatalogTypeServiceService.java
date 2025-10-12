@@ -16,10 +16,11 @@ import java.util.stream.Collectors;
 public class CatalogTypeServiceService {
     private final CatalogTypeServiceRepository catalogTypeServiceRepository;
     private final TypeServiceXUserRepository typeServiceXUserRepository;
-
-    public CatalogTypeServiceService(CatalogTypeServiceRepository catalogTypeServiceRepository, TypeServiceXUserRepository typeServiceXUserRepository) {
+    private final UserService userService;
+    public CatalogTypeServiceService(CatalogTypeServiceRepository catalogTypeServiceRepository, TypeServiceXUserRepository typeServiceXUserRepository, UserService userService) {
         this.catalogTypeServiceRepository = catalogTypeServiceRepository;
         this.typeServiceXUserRepository = typeServiceXUserRepository;
+        this.userService = userService;
     }
 
     public List<CatalogTypeServiceDTO> getAllCatalogTypeService() {
@@ -50,7 +51,11 @@ public class CatalogTypeServiceService {
         }
         return ResponseDTO.builder().items(listTypesDTO).build();
     }
-    public ResponseDTO _SaveTypeServiceByUser(String idUser, List<Long> ids) {
+    public ResponseDTO _SaveTypeServiceByUser(String token,String idUser, List<Long> ids) {
+        ResponseDTO responseDTO = userService._ValidIsActiveProvider(token, idUser);
+        if(responseDTO.error) {
+            return responseDTO;
+        }
         this._DeleteTypeServiceXUser(idUser);
         for(Long id : ids) {
             TypeServiceXUser typeServiceXUser = new TypeServiceXUser(idUser, id);
