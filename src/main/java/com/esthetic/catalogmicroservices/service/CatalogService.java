@@ -41,8 +41,6 @@ public class CatalogService {
     public void _UpdateMunicipality() throws JsonProcessingException {
         List<Object[]> municipality = catalogGeoMunicipalityRepository.findEmpty();
         for(Object[] row : municipality) {
-            System.out.println(row[1]);
-            System.out.println(row[2]);
             HttpHeaders headers = new HttpHeaders();
             HttpEntity httpEntity = new HttpEntity<>(headers);
             String apiUrl = "https://nominatim.openstreetmap.org/search?state="+row[1]+"&city="+row[2]+"&country=Mexico&format=json";
